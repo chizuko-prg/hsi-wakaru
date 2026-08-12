@@ -31,6 +31,68 @@
   gap: 6px;
 }
 
+/* --- シリーズのつながり --- */
+
+.home-series {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-tight);
+  padding: var(--space);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+}
+
+.home-series__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-tight);
+  margin: 0;
+}
+
+.home-series__row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 14px;
+  background: var(--bg);
+  border-left: 4px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+
+.home-series__row--current {
+  background: var(--amber-bg);
+  border-left-color: var(--amber);
+}
+
+.home-series__app {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-tight);
+  font-size: var(--fs-note);
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.home-series__badge {
+  color: #9a7420;
+  font-size: 11px;
+}
+
+.home-series__question {
+  margin: 0;
+  font-size: var(--fs-body);
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.home-series__view {
+  margin: 0;
+  font-size: 14px;
+  color: var(--navy-soft);
+  line-height: 1.6;
+}
+
 .home-footer {
   display: flex;
   justify-content: center;

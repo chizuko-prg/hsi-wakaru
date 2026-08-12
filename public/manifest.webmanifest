@@ -1,0 +1,17 @@
+{
+  "name": "HSIわかる？",
+  "short_name": "HSIわかる？",
+  "description": "HSIの見方を、動かしながら学ぶ学習ツール。学習専用で、実際の飛行判断・航法には使用できません。",
+  "lang": "ja",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#e9eef6",
+  "theme_color": "#e9eef6",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

@@ -191,9 +191,44 @@ npm run lint       # oxlint
 | R3 | Lesson 2、上空図、Lesson 3 | ✅ 完了 |
 | R4 | Lesson 4（Intercept） | ✅ 完了 |
 | R5 | Lesson 5（Tracking / 風） | ✅ 完了 |
-| R6 | 自由に動かす、修了画面、アイコン、公開準備 | 次 |
+| R6 | 自由に動かす、修了画面、アイコン、公開準備 | ✅ 完了 |
 
-未実装の画面は「準備中」表示にし、行き止まりを作りません。
+すべての画面が実装済みです。どの画面にも戻る手段があり、行き止まりはありません。
+
+## 画面
+
+| ルート | 画面 | 役割 |
+|---|---|---|
+| `/` | ホーム | 入口。シリーズの位置づけと進み具合 |
+| `/lessons` | レッスン一覧 | 5レッスンの状態と再開 |
+| `/lesson/:id` | 学習画面 | 手順を進める。修了表示も同じ画面の中 |
+| `/instrument` | 計器を見る | 各部をタップして意味を確認する |
+| `/free` | 自由に動かす | **理解確認用**。点数も制限時間もない |
+| `/course-complete` | 基本コース修了 | 学んだ概念を1本の流れに並べ直す |
+| `/about` | 注意事項 | 免責、簡略化していること、学習記録の扱い |
+
+`/free` は遊ぶ場所ではありません。正解判定を置かず、代わりに
+「確かめること」を並べて、その状況をすぐ作れるようにしています。
+
+## アイコン
+
+VORわかる？との差別化を意図しています。
+
+| アプリ | 表すもの |
+|---|---|
+| VORわかる？ | 地上局・電波・位置関係 — **外から見る航法** |
+| HSIわかる？ | 円形の計器面と固定された自機シンボル — **中から見る航法** |
+
+元データは [assets/icon.svg](assets/icon.svg)（favicon 用）と
+[assets/icon-square.svg](assets/icon-square.svg)（ホーム画面用・背景を塗りつぶし）です。
+小さく表示しても区別できるよう、要素は「暗い計器面・白い自機シンボル・
+青いコース矢印・琥珀色の機首指標」の4つに絞っています。
+
+`public/` の PNG は次のコマンドで書き出せます（macOS 標準ツールのみ使用）。
+
+```bash
+qlmanage -t -s 1024 -o /tmp/hsi-icon assets/icon.svg && qlmanage -t -s 1024 -o /tmp/hsi-icon assets/icon-square.svg && for s in 16 32 48; do sips -z $s $s /tmp/hsi-icon/icon.svg.png --out "public/favicon-${s}x${s}.png"; done && sips -z 180 180 /tmp/hsi-icon/icon-square.svg.png --out public/apple-touch-icon.png && sips -z 192 192 /tmp/hsi-icon/icon-square.svg.png --out public/icon-192.png && sips -z 512 512 /tmp/hsi-icon/icon-square.svg.png --out public/icon-512.png && cp assets/icon.svg public/favicon.svg
+```
 
 ## 免責
 

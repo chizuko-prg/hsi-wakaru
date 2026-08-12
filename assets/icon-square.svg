@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!--
+    ホーム画面用のアイコン。中身は icon.svg と同じ。
+    iOS はアイコンを角丸の四角に切り抜くため、透過のままだと角が黒くなる。
+    ここでは面を塗りつぶし、計器を少し内側に置いてある。
+  -->
+  <rect width="64" height="64" fill="#1b2a4a" />
+
+  <g transform="translate(32 32) scale(0.84) translate(-32 -32)">
+    <circle cx="32" cy="32" r="31" fill="#16203a" />
+    <circle cx="32" cy="32" r="27" fill="#202c4d" />
+
+    <g stroke="#f2f4fa" stroke-width="2.8" stroke-linecap="round">
+      <line x1="58" y1="32" x2="51" y2="32" />
+      <line x1="32" y1="58" x2="32" y2="51" />
+      <line x1="6" y1="32" x2="13" y2="32" />
+    </g>
+    <g stroke="#aeb8d2" stroke-width="1.8" stroke-linecap="round">
+      <line x1="50.4" y1="13.6" x2="46.8" y2="17.2" />
+      <line x1="50.4" y1="50.4" x2="46.8" y2="46.8" />
+      <line x1="13.6" y1="50.4" x2="17.2" y2="46.8" />
+      <line x1="13.6" y1="13.6" x2="17.2" y2="17.2" />
+    </g>
+
+    <g transform="rotate(38 32 32)">
+      <polygon points="32,7 26,17.5 38,17.5" fill="#3a9de0" />
+      <line
+        x1="32"
+        y1="45"
+        x2="32"
+        y2="57"
+        stroke="#3a9de0"
+        stroke-width="4.4"
+        stroke-linecap="round"
+      />
+    </g>
+
+    <g stroke="#ffffff" stroke-width="3.6" stroke-linecap="round">
+      <line x1="32" y1="22" x2="32" y2="42" />
+      <line x1="21" y1="31" x2="43" y2="31" />
+      <line x1="27" y1="38.5" x2="37" y2="38.5" />
+    </g>
+
+    <polygon points="32,1.5 27,11 37,11" fill="#e8a200" />
+  </g>
+</svg>

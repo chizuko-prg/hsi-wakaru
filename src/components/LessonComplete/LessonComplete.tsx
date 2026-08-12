@@ -17,6 +17,9 @@ export interface LessonCompleteProps {
   onReview: () => void;
   onBackToLessons: () => void;
   onNext?: () => void;
+  /** 5レッスンすべて終えたか。終えていれば修了画面へ案内する。 */
+  courseCompleted?: boolean;
+  onCourseComplete?: () => void;
 }
 
 export function LessonComplete({
@@ -26,6 +29,8 @@ export function LessonComplete({
   onReview,
   onBackToLessons,
   onNext,
+  courseCompleted = false,
+  onCourseComplete,
 }: LessonCompleteProps) {
   const copy = lesson.completion;
   const message = score >= lesson.passingScore ? copy.messageWhenStrong : copy.messageWhenMore;
@@ -64,7 +69,16 @@ export function LessonComplete({
         <p className="note-text">{copy.nextPreview}</p>
       </section>
 
-      {copy.nextAvailable && onNext ? (
+      {/*
+        主ボタンは1つだけ。優先順位は
+        すべて終えた → 修了画面 / 次がある → 次のレッスン / それ以外 → 一覧
+      */}
+      {courseCompleted && onCourseComplete ? (
+        <button type="button" className="button-primary" onClick={onCourseComplete}>
+          学んだことを整理する
+          <span className="mono-label">COURSE COMPLETE</span>
+        </button>
+      ) : copy.nextAvailable && onNext ? (
         <button type="button" className="button-primary" onClick={onNext}>
           次のレッスンへ
           <span className="mono-label">NEXT LESSON</span>

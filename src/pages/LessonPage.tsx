@@ -32,7 +32,9 @@ import {
   withAnswer,
   type QuizAttempts,
 } from '../lessons/lessonScore';
+import { LESSON_CATALOG } from '../lessons/lessonCatalog';
 import { resolveStartStepIndex } from '../lessons/lessonResume';
+import { countCompletedLessons } from '../storage/progressStorage';
 import {
   buildStepState,
   countScoredQuizSteps,
@@ -122,6 +124,8 @@ export function LessonPage({ navigate, lesson }: LessonPageProps) {
 
   if (finished) {
     const nextId = lesson.nextLessonId;
+    // このレッスンを終えた時点で全部そろったなら、まとめの画面へ案内する。
+    const courseCompleted = countCompletedLessons(progress) >= LESSON_CATALOG.length;
 
     return (
       <LessonComplete
@@ -135,6 +139,8 @@ export function LessonPage({ navigate, lesson }: LessonPageProps) {
         }}
         onBackToLessons={() => navigate(ROUTES.lessons)}
         onNext={nextId ? () => navigate(lessonPath(nextId)) : undefined}
+        courseCompleted={courseCompleted}
+        onCourseComplete={() => navigate(ROUTES.courseComplete)}
       />
     );
   }

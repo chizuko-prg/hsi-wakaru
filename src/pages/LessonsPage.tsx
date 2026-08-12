@@ -62,13 +62,29 @@ export function LessonsPage({ navigate }: PageProps) {
         })}
       </ul>
 
-      <p className="note-text">
-        ※準備中のレッスンは順に追加します。先に「計器を見る」で自由に動かすこともできます。
-      </p>
+      {completed >= LESSON_CATALOG.length ? (
+        <button
+          type="button"
+          className="button-primary"
+          onClick={() => navigate(ROUTES.courseComplete)}
+        >
+          学んだことを整理する
+          <span className="mono-label">COURSE COMPLETE</span>
+        </button>
+      ) : (
+        <p className="note-text">
+          ※途中でやめても、次に開いたときは進んでいたところから再開できます。
+        </p>
+      )}
 
       <button type="button" className="button-secondary" onClick={() => navigate(ROUTES.instrument)}>
         計器を見る
         <span className="mono-label">INDICATOR</span>
+      </button>
+
+      <button type="button" className="button-secondary" onClick={() => navigate(ROUTES.freePlay)}>
+        自由に動かす
+        <span className="mono-label">FREE PLAY</span>
       </button>
     </div>
   );
