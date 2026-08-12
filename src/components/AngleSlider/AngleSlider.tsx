@@ -12,7 +12,7 @@
 import { formatBearing, normalize360 } from '../../domain/hsi/angles';
 import './AngleSlider.css';
 
-export type AngleSliderTone = 'heading' | 'course' | 'position';
+export type AngleSliderTone = 'heading' | 'course' | 'position' | 'wind';
 
 export interface AngleSliderProps {
   id: string;

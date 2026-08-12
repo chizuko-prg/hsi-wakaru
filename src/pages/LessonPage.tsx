@@ -22,7 +22,9 @@ import { PlanView } from '../components/PlanView/PlanView';
 import { SafetyNote } from '../components/SafetyNote/SafetyNote';
 import { ScreenHeader } from '../components/ScreenHeader/ScreenHeader';
 import { SituationStatus } from '../components/SituationStatus/SituationStatus';
+import { WindControl } from '../components/WindControl/WindControl';
 import { signedAngleDiff } from '../domain/hsi/angles';
+import { deriveHsiState } from '../domain/hsi/deriveHsiState';
 import type { HsiState, VisibleElements } from '../domain/hsi/types';
 import {
   attemptOf,
@@ -34,8 +36,8 @@ import { resolveStartStepIndex } from '../lessons/lessonResume';
 import {
   buildStepState,
   countScoredQuizSteps,
-  type InteractControl,
   type LessonDefinition,
+  type WatchTarget,
 } from '../lessons/lessonTypes';
 import type { PageProps } from './pageProps';
 import './LessonPage.css';
@@ -44,21 +46,31 @@ export interface LessonPageProps extends PageProps {
   lesson: LessonDefinition;
 }
 
-const CONTROL_LABEL: Record<InteractControl, { label: string; sublabel: string }> = {
+const WATCH_LABEL: Record<WatchTarget, { label: string; sublabel: string }> = {
   heading: { label: 'HDG', sublabel: '機首方位' },
   course: { label: 'CRS', sublabel: 'コース' },
   position: { label: 'POS', sublabel: '自機の位置' },
+  wind: { label: 'WIND', sublabel: '風の向き' },
+  track: { label: 'TRK', sublabel: '進む方向' },
 };
 
-/** その操作が指している角度。位置は「局から見た自機の方向」で表す。 */
-function controlValue(control: InteractControl, state: HsiState): number {
-  switch (control) {
+/**
+ * その項目が指している角度。
+ * 位置は「局から見た自機の方向」、進む方向は判定ロジックの算出値で表す。
+ */
+function watchValue(target: WatchTarget, state: HsiState): number {
+  switch (target) {
     case 'heading':
       return state.headingDeg;
     case 'course':
       return state.courseDeg;
     case 'position':
       return aircraftRadialOf(state);
+    case 'wind':
+      return state.wind?.fromDeg ?? 0;
+    case 'track':
+      // 風の影響を含んだ実際の進行方向。ここでも判定ロジックを共有する。
+      return deriveHsiState(state).trackDeg;
   }
 }
 
@@ -151,25 +163,27 @@ export function LessonPage({ navigate, lesson }: LessonPageProps) {
     ? false
     : interactStep.requiredTrend !== undefined
       ? hsi.derived.interceptTrend === interactStep.requiredTrend
-      : interactStep.requiredCourseAlignmentDeg !== undefined
-        ? hsi.derived.interceptAngleDeg <= interactStep.requiredCourseAlignmentDeg
-        : interactStep.controls.every(
-            (control) =>
-              Math.abs(
-                signedAngleDiff(
-                  controlValue(control, hsi.state),
-                  controlValue(control, stepInitial),
-                ),
-              ) >= requiredChange,
-          );
+      : interactStep.requiredTrackAlignmentDeg !== undefined
+        ? hsi.derived.trackCourseAngleDeg <= interactStep.requiredTrackAlignmentDeg
+        : interactStep.requiredCourseAlignmentDeg !== undefined
+          ? hsi.derived.interceptAngleDeg <= interactStep.requiredCourseAlignmentDeg
+          : interactStep.controls.every(
+              (control) =>
+                Math.abs(
+                  signedAngleDiff(
+                    watchValue(control, hsi.state),
+                    watchValue(control, stepInitial),
+                  ),
+                ) >= requiredChange,
+            );
 
   const watchRows: ChangeWatchRow[] =
-    interactStep?.watch?.map((control) => ({
-      label: CONTROL_LABEL[control].label,
-      sublabel: CONTROL_LABEL[control].sublabel,
-      startDeg: controlValue(control, stepInitial),
-      currentDeg: controlValue(control, hsi.state),
-      tone: control,
+    interactStep?.watch?.map((target) => ({
+      label: WATCH_LABEL[target].label,
+      sublabel: WATCH_LABEL[target].sublabel,
+      startDeg: watchValue(target, stepInitial),
+      currentDeg: watchValue(target, hsi.state),
+      tone: target === 'track' ? 'track' : target === 'wind' ? 'wind' : target,
     })) ?? [];
 
   const canGoNext = step.kind === 'quiz' ? attempt.solved : interactStep ? moved : true;
@@ -216,30 +230,45 @@ export function LessonPage({ navigate, lesson }: LessonPageProps) {
             <PlanView state={hsi.state} derived={hsi.derived} visible={visible} />
           )}
 
-          {step.situation && <SituationStatus state={hsi.state} derived={hsi.derived} />}
+          {step.situation && (
+            <SituationStatus
+              state={hsi.state}
+              derived={hsi.derived}
+              showTrack={visible.track}
+            />
+          )}
         </>
       )}
 
       {interactStep && (
         <div className="lesson-controls stack-tight">
-          {interactStep.controls.map((control) => (
-            <AngleSlider
-              key={control}
-              id={`lesson-${control}`}
-              label={CONTROL_LABEL[control].label}
-              sublabel={CONTROL_LABEL[control].sublabel}
-              tone={control}
-              value={controlValue(control, hsi.state)}
-              onChange={
-                control === 'heading'
-                  ? hsi.setHeading
-                  : control === 'course'
-                    ? hsi.setCourse
-                    : (deg) => hsi.setAircraftRadial(deg)
-              }
-              onInteract={markInteracting}
-            />
-          ))}
+          {interactStep.controls.map((control) =>
+            control === 'wind' ? (
+              <WindControl
+                key={control}
+                wind={hsi.state.wind}
+                onChange={hsi.setWind}
+                onInteract={markInteracting}
+              />
+            ) : (
+              <AngleSlider
+                key={control}
+                id={`lesson-${control}`}
+                label={WATCH_LABEL[control].label}
+                sublabel={WATCH_LABEL[control].sublabel}
+                tone={control}
+                value={watchValue(control, hsi.state)}
+                onChange={
+                  control === 'heading'
+                    ? hsi.setHeading
+                    : control === 'course'
+                      ? hsi.setCourse
+                      : (deg) => hsi.setAircraftRadial(deg)
+                }
+                onInteract={markInteracting}
+              />
+            ),
+          )}
         </div>
       )}
 
@@ -315,11 +344,13 @@ export function LessonPage({ navigate, lesson }: LessonPageProps) {
             ? '選択肢から選ぶと、次へ進めます。'
             : interactStep.requiredTrend === 'closing'
               ? 'コースへ近づく向きを作ると、次へ進めます。'
-              : interactStep.requiredCourseAlignmentDeg !== undefined
-                ? '機首をコースの向きに合わせると、次へ進めます。'
-                : interactStep.controls.length > 1
-                  ? 'つまみを両方とも動かすと、次へ進めます。'
-                  : 'つまみを動かして、計器の変化を見てから次へ進みます。'}
+              : interactStep.requiredTrackAlignmentDeg !== undefined
+                ? '進む方向（TRK）をコースに合わせると、次へ進めます。'
+                : interactStep.requiredCourseAlignmentDeg !== undefined
+                  ? '機首をコースの向きに合わせると、次へ進めます。'
+                  : interactStep.controls.length > 1
+                    ? 'つまみを両方とも動かすと、次へ進めます。'
+                    : 'つまみを動かして、計器の変化を見てから次へ進みます。'}
         </p>
       )}
     </div>

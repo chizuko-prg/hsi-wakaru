@@ -36,3 +36,10 @@ export const TREND_PARALLEL_EPS_DEG = COURSE_ALIGNED_EPS_DEG;
 
 /** 既定の対気速度。風の計算にだけ使う。 */
 export const DEFAULT_TAS_KT = 100;
+
+/**
+ * 選べる風速。数値を覚えてもらうためではなく、強さの違いを見せるため。
+ * レッスンで設定する風速は必ずこの中から選ぶ。
+ * 選べない値にすると、風の操作画面でどのボタンも選ばれていない状態になる。
+ */
+export const WIND_SPEEDS_KT = [0, 10, 20, 30];

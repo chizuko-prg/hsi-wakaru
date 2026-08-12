@@ -35,6 +35,10 @@
   color: var(--hsi-course);
 }
 
+.hsi__readout--track .readout {
+  color: var(--hsi-track);
+}
+
 /* --- 計器の面 --- */
 
 .hsi__face-wrap {
@@ -162,6 +166,14 @@
 
 .hsi-toFrom--from {
   fill: var(--hsi-from);
+}
+
+/* --- 実際に進んでいる方向 --- */
+
+.hsi-track-mark {
+  fill: var(--hsi-track);
+  stroke: var(--hsi-bezel);
+  stroke-width: 1.2;
 }
 
 /* --- 固定層 --- */

@@ -27,7 +27,13 @@ export interface LessonChoice {
 export type StepCompletionRule = { type: 'tap_next' } | { type: 'answer'; value: string };
 
 /** 手順の中で利用者が動かせるもの。 */
-export type InteractControl = 'heading' | 'course' | 'position';
+export type InteractControl = 'heading' | 'course' | 'position' | 'wind';
+
+/**
+ * 開始時といまの値を並べて見せる対象。
+ * 動かせないものも挙げられる。「変わっていない」「同じだけ動いた」を見せるため。
+ */
+export type WatchTarget = InteractControl | 'track';
 
 interface LessonStepBase {
   id: string;
@@ -92,7 +98,7 @@ export interface InteractStep extends LessonStepBase {
    * 数字で見くらべたいもの。開始時の値といまの値を並べて出す。
    * 動かせないものも挙げられる。「変わっていない」ことを見せるのが狙い。
    */
-  watch?: InteractControl[];
+  watch?: WatchTarget[];
   lines: string[];
   /** 実際に動かしたあとに出す補足。 */
   changeNote: string;
@@ -109,6 +115,12 @@ export interface InteractStep extends LessonStepBase {
    * requiredTrend では、真逆を向いていても平行として通ってしまうため分けている。
    */
   requiredCourseAlignmentDeg?: number;
+  /**
+   * 実際に進んでいる方向とコースの差がこの値以内になったら次へ進める。
+   * 風があるとき、機首を合わせただけではコースを保てない。
+   * 「機首ではなく進む方向を合わせる」を体験させる手順で使う。
+   */
+  requiredTrackAlignmentDeg?: number;
   nextLabel?: string;
   completionRule: { type: 'tap_next' };
 }

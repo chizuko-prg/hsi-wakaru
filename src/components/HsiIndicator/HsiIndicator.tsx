@@ -22,7 +22,7 @@ import type { HsiDerivedState, HsiState, VisibleElements } from '../../domain/hs
 import './HsiIndicator.css';
 
 /** 説明のために注目させられる部品。 */
-export type HsiPart = 'rose' | 'lubber' | 'aircraft' | 'courseArrow' | 'cdi' | 'toFrom';
+export type HsiPart = 'rose' | 'lubber' | 'aircraft' | 'courseArrow' | 'cdi' | 'toFrom' | 'track';
 
 /*
  * 半径の配置。外側から内側へ。
@@ -40,6 +40,8 @@ const COURSE_HEAD_BASE_R = 58;
 const TO_FROM_OUTER_R = 48;
 const TO_FROM_INNER_R = 36;
 const CDI_BAR_R = 30;
+/** 実際に進んでいる方向の印を置く半径。目盛りの帯の中に置く。 */
+const TRACK_MARK_R = 96;
 
 /** CDIが振り切れたときの横移動量（px）。ドットは半分ごとに置く。 */
 const CDI_FULL_PX = 32;
@@ -76,7 +78,7 @@ export interface HsiIndicatorProps {
   derived: HsiDerivedState;
   visible: Pick<
     VisibleElements,
-    'rose' | 'headingReadout' | 'courseArrow' | 'courseReadout' | 'cdi' | 'toFrom'
+    'rose' | 'headingReadout' | 'courseArrow' | 'courseReadout' | 'cdi' | 'toFrom' | 'track'
   >;
   /** スライダーを動かしている最中は短く、それ以外はゆっくり動かす。 */
   motion?: 'calm' | 'fast';
@@ -105,12 +107,19 @@ export function HsiIndicator({
 
   return (
     <div className="hsi">
-      {(visible.headingReadout || visible.courseReadout) && (
+      {(visible.headingReadout || visible.courseReadout || visible.track) && (
         <div className="hsi__readouts">
           {visible.headingReadout && (
             <div className="hsi__readout hsi__readout--heading">
               <span className="mono-label">HDG / 機首方位</span>
               <span className="readout">{formatBearing(state.headingDeg)}°</span>
+            </div>
+          )}
+          {/* 実際に進んでいる方向。無風では機首と同じ値になる。 */}
+          {visible.track && (
+            <div className="hsi__readout hsi__readout--track">
+              <span className="mono-label">TRK / 進む方向</span>
+              <span className="readout">{formatBearing(derived.trackDeg)}°</span>
             </div>
           )}
           {visible.courseReadout && (
@@ -173,6 +182,25 @@ export function HsiIndicator({
                   </text>
                 </g>
               ))}
+
+              {/*
+                実際に進んでいる方向の印。ローズと一緒に回るので、
+                機首（上の三角）との開きがそのまま風で流されている量になる。
+                無風では上の三角と重なる。
+              */}
+              {visible.track && (
+                <g
+                  className={partClass('track')}
+                  transform={`rotate(${derived.trackDeg} ${C} ${C})`}
+                >
+                  <polygon
+                    points={`${C},${C - TRACK_MARK_R - 6} ${C + 5},${C - TRACK_MARK_R} ${C},${
+                      C - TRACK_MARK_R + 6
+                    } ${C - 5},${C - TRACK_MARK_R}`}
+                    className="hsi-track-mark"
+                  />
+                </g>
+              )}
 
               {/* ---- 回転層2: コース矢印・CDI・TO/FROM。ローズの内側で course だけ回る ---- */}
               {visible.courseArrow && (

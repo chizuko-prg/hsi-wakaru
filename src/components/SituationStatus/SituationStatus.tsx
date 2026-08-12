@@ -16,14 +16,21 @@ export interface SituationStatusProps {
   derived: HsiDerivedState;
   /** 機首とコースの差がこの値以内なら「合っている」とみなす。 */
   alignmentToleranceDeg?: number;
+  /**
+   * 実際に進んでいる方向の行を足す。
+   * 風があるとき、コースを保てているかは機首ではなくこちらで決まる。
+   */
+  showTrack?: boolean;
 }
 
 export function SituationStatus({
   state,
   derived,
   alignmentToleranceDeg = COURSE_ALIGNED_EPS_DEG,
+  showTrack = false,
 }: SituationStatusProps) {
   const aligned = derived.interceptAngleDeg <= alignmentToleranceDeg;
+  const trackAligned = derived.trackCourseAngleDeg <= alignmentToleranceDeg;
   const relative = Math.round(derived.courseRelativeDeg);
 
   const headingText = aligned
@@ -50,6 +57,21 @@ export function SituationStatus({
             {headingText}
           </dd>
         </div>
+
+        {/*
+          風があるときは、機首を合わせてもコースを保てるとはかぎらない。
+          決め手はこちらの行なので、機首の行のすぐ下に並べる。
+        */}
+        {showTrack && (
+          <div className="situation__row">
+            <dt className="situation__key">進む方向</dt>
+            <dd className="situation__value" data-aligned={trackAligned}>
+              {trackAligned
+                ? '進む方向はコースに合っています'
+                : 'コースとは違う方向へ進んでいます'}
+            </dd>
+          </div>
+        )}
 
         {/* ここが本題。CDIの左右からは決まらない。 */}
         <div className="situation__row situation__row--trend">

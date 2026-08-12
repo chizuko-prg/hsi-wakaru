@@ -16,7 +16,7 @@ export interface ChangeWatchRow {
   sublabel: string;
   startDeg: number;
   currentDeg: number;
-  tone: 'heading' | 'course' | 'position';
+  tone: 'heading' | 'course' | 'position' | 'wind' | 'track';
 }
 
 /** 1度でも動いたか。丸め誤差で「動いた」と言わないよう少し余裕を持たせる。 */

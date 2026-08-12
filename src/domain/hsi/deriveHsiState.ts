@@ -142,6 +142,7 @@ export function deriveHsiState(state: HsiState): HsiDerivedState {
     interceptAngleDeg: Math.abs(courseRelativeDeg),
     trackDeg: windSolution.trackDeg,
     driftAngleDeg: windSolution.driftAngleDeg,
+    trackCourseAngleDeg: Math.abs(signedAngleDiff(windSolution.trackDeg, course)),
     groundSpeedKt: windSolution.groundSpeedKt,
     requiredHeadingDeg: requiredHeadingForCourse(course, state.tasKt, state.wind),
   };

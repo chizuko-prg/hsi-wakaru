@@ -21,6 +21,10 @@
   border-left-color: var(--navy-soft);
 }
 
+.angle-slider[data-tone='wind'] {
+  border-left-color: var(--hsi-wind);
+}
+
 .angle-slider__head {
   display: flex;
   align-items: baseline;

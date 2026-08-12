@@ -130,6 +130,12 @@ export interface HsiDerivedState {
   trackDeg: number;
   /** 偏流角。track - heading。無風なら 0。 */
   driftAngleDeg: number;
+  /**
+   * 対地進路とコースの差の大きさ(0..180)。
+   * 風があるとき、機首とコースの差（interceptAngleDeg）とは別の値になる。
+   * コースを維持できているかは、機首ではなくこちらで決まる。
+   */
+  trackCourseAngleDeg: number;
   groundSpeedKt: number;
   /** コースを維持するために必要な機首方位。風が強すぎて解けないときは null。 */
   requiredHeadingDeg: number | null;

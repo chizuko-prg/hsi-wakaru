@@ -279,6 +279,6 @@ export const LESSON4: LessonDefinition = {
       '3つ並べた画面に戻ってみてください。CDIが同じでも答えが違うところが、このレッスンの山です。',
     nextPreview:
       'Lesson 5 では、風があるときに機首と実際に進む方向がずれることを扱います。コースに乗せ続けるための考え方です。',
-    nextAvailable: false,
+    nextAvailable: true,
   },
 };

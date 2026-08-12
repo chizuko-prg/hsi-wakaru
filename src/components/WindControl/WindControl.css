@@ -1,0 +1,45 @@
+.wind-control {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-tight);
+}
+
+.wind-control__speeds {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px var(--space);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-left: 5px solid var(--hsi-wind);
+  border-radius: var(--radius-sm);
+}
+
+.wind-control__buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-tight);
+}
+
+.wind-control__speed {
+  min-height: var(--tap-min);
+  padding: 8px 4px;
+  background: var(--paper);
+  color: var(--navy);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.wind-control__speed:hover {
+  border-color: var(--amber);
+}
+
+.wind-control__speed[aria-pressed='true'] {
+  background: var(--navy);
+  color: var(--paper);
+  border-color: var(--navy);
+}

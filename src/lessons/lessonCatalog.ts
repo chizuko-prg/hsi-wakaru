@@ -9,6 +9,7 @@ import { LESSON1 } from './lesson1';
 import { LESSON2 } from './lesson2';
 import { LESSON3 } from './lesson3';
 import { LESSON4 } from './lesson4';
+import { LESSON5 } from './lesson5';
 import type { LessonDefinition } from './lessonTypes';
 
 export interface LessonCatalogEntry {
@@ -56,10 +57,11 @@ export const LESSON_CATALOG: LessonCatalogEntry[] = [
   },
   {
     id: 'lesson5',
-    monoLabel: 'LESSON 5',
-    title: 'Tracking',
-    subtitle: '風があるとどうなるか',
-    durationText: '約6分',
+    monoLabel: LESSON5.monoLabel,
+    title: LESSON5.title,
+    subtitle: LESSON5.subtitle,
+    durationText: LESSON5.durationText,
+    definition: LESSON5,
   },
 ];
 
