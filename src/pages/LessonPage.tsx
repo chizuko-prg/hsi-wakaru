@@ -12,14 +12,16 @@ import { useInstrumentMotion } from '../app/useInstrumentMotion';
 import { aircraftRadialOf, useHsiState } from '../app/useHsiState';
 import { useProgress } from '../app/useProgress';
 import { AngleSlider } from '../components/AngleSlider/AngleSlider';
+import { ChangeWatch, type ChangeWatchRow } from '../components/ChangeWatch/ChangeWatch';
 import { ChoiceList } from '../components/ChoiceList/ChoiceList';
 import { ExplanationCard } from '../components/ExplanationCard/ExplanationCard';
 import { HsiIndicator } from '../components/HsiIndicator/HsiIndicator';
 import { LessonComplete } from '../components/LessonComplete/LessonComplete';
+import { PlanView } from '../components/PlanView/PlanView';
 import { SafetyNote } from '../components/SafetyNote/SafetyNote';
 import { ScreenHeader } from '../components/ScreenHeader/ScreenHeader';
 import { signedAngleDiff } from '../domain/hsi/angles';
-import type { HsiState } from '../domain/hsi/types';
+import type { HsiState, VisibleElements } from '../domain/hsi/types';
 import {
   attemptOf,
   countCorrectOnFirstTry,
@@ -31,7 +33,6 @@ import {
   buildStepState,
   countScoredQuizSteps,
   type InteractControl,
-  type InteractStep,
   type LessonDefinition,
 } from '../lessons/lessonTypes';
 import type { PageProps } from './pageProps';
@@ -47,21 +48,15 @@ const CONTROL_LABEL: Record<InteractControl, { label: string; sublabel: string }
   position: { label: 'POS', sublabel: '自機の位置' },
 };
 
-/** その手順で動かす値が、初期状態からどれだけ変わったか。 */
-function changedAmountDeg(
-  control: InteractControl,
-  current: HsiState,
-  initial: HsiState,
-  currentRadial: number,
-  initialRadial: number,
-): number {
+/** その操作が指している角度。位置は「局から見た自機の方向」で表す。 */
+function controlValue(control: InteractControl, state: HsiState): number {
   switch (control) {
     case 'heading':
-      return Math.abs(signedAngleDiff(current.headingDeg, initial.headingDeg));
+      return state.headingDeg;
     case 'course':
-      return Math.abs(signedAngleDiff(current.courseDeg, initial.courseDeg));
+      return state.courseDeg;
     case 'position':
-      return Math.abs(signedAngleDiff(currentRadial, initialRadial));
+      return aircraftRadialOf(state);
   }
 }
 
@@ -78,7 +73,10 @@ export function LessonPage({ navigate, lesson }: LessonPageProps) {
   const { motion, markInteracting } = useInstrumentMotion();
 
   const step = lesson.steps[stepIndex];
-  const stepInitial = useMemo(() => buildStepState(step, lesson.baseState), [step, lesson.baseState]);
+  const stepInitial = useMemo(
+    () => buildStepState(step, lesson.baseState),
+    [step, lesson.baseState],
+  );
 
   // 手順が変わるたびに、その手順の初期状態から始め直す。
   const { reset } = hsi;
@@ -128,24 +126,41 @@ export function LessonPage({ navigate, lesson }: LessonPageProps) {
   }
 
   const attempt = attemptOf(attempts, step.id);
-  const currentRadial = aircraftRadialOf(hsi.state, hsi.derived);
-  const initialRadial = aircraftRadialOf(stepInitial, hsi.derived);
+  const interactStep = step.kind === 'interact' ? step : null;
 
-  const interactStep = step.kind === 'interact' ? (step as InteractStep) : null;
-  const movedDeg = interactStep
-    ? changedAmountDeg(interactStep.control, hsi.state, stepInitial, currentRadial, initialRadial)
-    : 0;
-  const moved = interactStep ? movedDeg >= (interactStep.requiredChangeDeg ?? 10) : false;
+  /*
+   * 見せる部品。
+   * 確認問題では、答えたあとにだけ足す部品がある（上空図の答え合わせ）。
+   * 出題中に足してしまうと、計器を読まずに図で答えられてしまう。
+   */
+  const visible: VisibleElements =
+    step.kind === 'quiz' && attempt.solved && step.revealVisible
+      ? { ...step.visible, ...step.revealVisible }
+      : step.visible;
+
+  const requiredChange = interactStep?.requiredChangeDeg ?? 10;
+  const moved = interactStep
+    ? interactStep.controls.every(
+        (control) =>
+          Math.abs(
+            signedAngleDiff(controlValue(control, hsi.state), controlValue(control, stepInitial)),
+          ) >= requiredChange,
+      )
+    : false;
+
+  const watchRows: ChangeWatchRow[] =
+    interactStep?.watch?.map((control) => ({
+      label: CONTROL_LABEL[control].label,
+      sublabel: CONTROL_LABEL[control].sublabel,
+      startDeg: controlValue(control, stepInitial),
+      currentDeg: controlValue(control, hsi.state),
+      tone: control,
+    })) ?? [];
 
   const canGoNext = step.kind === 'quiz' ? attempt.solved : interactStep ? moved : true;
+  const isLastStep = stepIndex + 1 === lesson.steps.length;
 
-  const nextLabel =
-    step.kind === 'quiz'
-      ? '次へ'
-      : (step.kind === 'teach' || step.kind === 'interact' || step.kind === 'summary') &&
-          step.nextLabel
-        ? step.nextLabel
-        : '次へ';
+  const nextLabel = step.kind === 'quiz' ? '次へ' : (step.nextLabel ?? '次へ');
 
   return (
     <div className="stack">
@@ -163,34 +178,39 @@ export function LessonPage({ navigate, lesson }: LessonPageProps) {
       <HsiIndicator
         state={hsi.state}
         derived={hsi.derived}
-        visible={step.visible}
+        visible={visible}
         motion={motion}
         spotlight={step.spotlight ?? null}
       />
 
-      {interactStep && (
-        <AngleSlider
-          id={`lesson-${interactStep.control}`}
-          label={CONTROL_LABEL[interactStep.control].label}
-          sublabel={CONTROL_LABEL[interactStep.control].sublabel}
-          tone={interactStep.control}
-          value={
-            interactStep.control === 'heading'
-              ? hsi.state.headingDeg
-              : interactStep.control === 'course'
-                ? hsi.state.courseDeg
-                : currentRadial
-          }
-          onChange={
-            interactStep.control === 'heading'
-              ? hsi.setHeading
-              : interactStep.control === 'course'
-                ? hsi.setCourse
-                : (deg) => hsi.setAircraftRadial(deg)
-          }
-          onInteract={markInteracting}
-        />
+      {visible.planView && (
+        <PlanView state={hsi.state} derived={hsi.derived} visible={visible} />
       )}
+
+      {interactStep && (
+        <div className="lesson-controls stack-tight">
+          {interactStep.controls.map((control) => (
+            <AngleSlider
+              key={control}
+              id={`lesson-${control}`}
+              label={CONTROL_LABEL[control].label}
+              sublabel={CONTROL_LABEL[control].sublabel}
+              tone={control}
+              value={controlValue(control, hsi.state)}
+              onChange={
+                control === 'heading'
+                  ? hsi.setHeading
+                  : control === 'course'
+                    ? hsi.setCourse
+                    : (deg) => hsi.setAircraftRadial(deg)
+              }
+              onInteract={markInteracting}
+            />
+          ))}
+        </div>
+      )}
+
+      {watchRows.length > 0 && <ChangeWatch rows={watchRows} />}
 
       {step.kind === 'teach' && (
         <ExplanationCard
@@ -212,7 +232,12 @@ export function LessonPage({ navigate, lesson }: LessonPageProps) {
       )}
 
       {step.kind === 'summary' && (
-        <ExplanationCard kind="normal" monoLabel="SUMMARY / まとめ" heading={step.title} lines={step.lines} />
+        <ExplanationCard
+          kind="normal"
+          monoLabel="SUMMARY / まとめ"
+          heading={step.title}
+          lines={step.lines}
+        />
       )}
 
       {step.kind === 'quiz' && (
@@ -249,14 +274,14 @@ export function LessonPage({ navigate, lesson }: LessonPageProps) {
       {canGoNext ? (
         <button type="button" className="button-primary" onClick={goNext}>
           {nextLabel}
-          <span className="mono-label">
-            {stepIndex + 1 === lesson.steps.length ? 'FINISH' : 'NEXT'}
-          </span>
+          <span className="mono-label">{isLastStep ? 'FINISH' : 'NEXT'}</span>
         </button>
       ) : (
         <p className="lesson-hold note-text">
           {interactStep
-            ? 'つまみを動かして、計器の変化を見てから次へ進みます。'
+            ? interactStep.controls.length > 1
+              ? 'つまみを両方とも動かすと、次へ進めます。'
+              : 'つまみを動かして、計器の変化を見てから次へ進みます。'
             : '選択肢から選ぶと、次へ進めます。'}
         </p>
       )}

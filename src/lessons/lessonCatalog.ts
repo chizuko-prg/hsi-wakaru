@@ -6,6 +6,8 @@
 
 import type { LessonId } from '../domain/hsi/types';
 import { LESSON1 } from './lesson1';
+import { LESSON2 } from './lesson2';
+import { LESSON3 } from './lesson3';
 import type { LessonDefinition } from './lessonTypes';
 
 export interface LessonCatalogEntry {
@@ -29,17 +31,19 @@ export const LESSON_CATALOG: LessonCatalogEntry[] = [
   },
   {
     id: 'lesson2',
-    monoLabel: 'LESSON 2',
-    title: 'HeadingとCourse',
-    subtitle: '2つは別ものだと確かめる',
-    durationText: '約6分',
+    monoLabel: LESSON2.monoLabel,
+    title: LESSON2.title,
+    subtitle: LESSON2.subtitle,
+    durationText: LESSON2.durationText,
+    definition: LESSON2,
   },
   {
     id: 'lesson3',
-    monoLabel: 'LESSON 3',
-    title: 'CDIをHSIで読む',
-    subtitle: 'コースは自分の左右どちらか',
-    durationText: '約7分',
+    monoLabel: LESSON3.monoLabel,
+    title: LESSON3.title,
+    subtitle: LESSON3.subtitle,
+    durationText: LESSON3.durationText,
+    definition: LESSON3,
   },
   {
     id: 'lesson4',

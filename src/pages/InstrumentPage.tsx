@@ -172,7 +172,7 @@ export function InstrumentPage({ navigate }: PageProps) {
           label="POS"
           sublabel="自機の位置"
           tone="position"
-          value={aircraftRadialOf(state, derived)}
+          value={aircraftRadialOf(state)}
           onChange={(deg) => hsi.setAircraftRadial(deg)}
           onInteract={markInteracting}
           hint="局から見て、自分がどの方向にいるか。CDIとTO/FROMはここで変わります。"

@@ -9,7 +9,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import { normalize360 } from '../domain/hsi/angles';
 import { DEFAULT_DISTANCE, DEFAULT_TAS_KT } from '../domain/hsi/constants';
-import { deriveHsiState } from '../domain/hsi/deriveHsiState';
+import { deriveHsiState, radialFromStation } from '../domain/hsi/deriveHsiState';
 import { pointFromRadial } from '../domain/hsi/geometry';
 import type { HsiDerivedState, HsiState, Point, Wind } from '../domain/hsi/types';
 
@@ -40,9 +40,16 @@ export interface HsiController {
   reset: (next?: Partial<HsiState>) => void;
 }
 
-/** 現在の自機位置を、局から見た方向として読み直す。位置スライダーの表示に使う。 */
-export function aircraftRadialOf(state: HsiState, derived: HsiDerivedState): number {
-  return derived.radialDeg ?? normalize360(state.courseDeg + 180);
+/**
+ * 自機位置を、局から見た方向として読み直す。位置スライダーの表示に使う。
+ *
+ * 派生値ではなく状態から直接求める。
+ * 「この手順の初期位置」のように、いまの派生値と対応しない状態を渡すことがあるため。
+ */
+export function aircraftRadialOf(state: HsiState): number {
+  return (
+    radialFromStation(state.station, state.aircraft) ?? normalize360(state.courseDeg + 180)
+  );
 }
 
 export function useHsiState(initial: Partial<HsiState> = {}): HsiController {

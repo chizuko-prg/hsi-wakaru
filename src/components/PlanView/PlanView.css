@@ -1,0 +1,122 @@
+/*
+ * 上空図は「紙の地図」として明るい面に描く。
+ * ダークな計器と並べたとき、外から見た図と計器の中の見え方を取り違えないようにする。
+ */
+
+.plan-view {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 12px var(--space) var(--space);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+}
+
+.plan-view__caption {
+  order: -1;
+}
+
+.plan-view__canvas {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* --- 北の指標 --- */
+
+.pv-north line {
+  stroke: var(--navy-soft);
+  stroke-width: 1.6;
+}
+
+.pv-north polygon {
+  fill: var(--navy-soft);
+}
+
+.pv-north text {
+  fill: var(--navy-soft);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* --- コース線 --- */
+
+.pv-course line {
+  stroke: var(--hsi-course);
+  stroke-width: 2.6;
+}
+
+.pv-course polygon {
+  fill: var(--hsi-course);
+}
+
+/* コース線からの横のずれ。CDIが示している距離。 */
+.pv-crosstrack {
+  stroke: var(--hsi-cdi);
+  stroke-width: 2;
+  stroke-dasharray: 4 4;
+}
+
+/* --- 局 --- */
+
+.pv-station circle {
+  fill: none;
+  stroke: var(--hsi-station);
+  stroke-width: 2;
+}
+
+.pv-station__dot {
+  fill: var(--hsi-station);
+}
+
+/* --- 自機 --- */
+
+.pv-aircraft polygon {
+  fill: var(--navy);
+}
+
+/* --- 実際に進んでいる向き --- */
+
+.pv-track line {
+  stroke: var(--hsi-track);
+  stroke-width: 2.2;
+  stroke-dasharray: 5 4;
+}
+
+.pv-track polygon {
+  fill: var(--hsi-track);
+}
+
+/* --- 風 --- */
+
+.pv-wind line {
+  stroke: var(--hsi-wind);
+  stroke-width: 2;
+}
+
+.pv-wind polygon {
+  fill: var(--hsi-wind);
+}
+
+/* --- 凡例 --- */
+
+.plan-view__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin: 0;
+  font-size: 13.5px;
+}
+
+.plan-view__key--course {
+  color: #1f6ea8;
+  font-weight: 700;
+}
+
+.plan-view__key--aircraft {
+  color: var(--navy);
+  font-weight: 700;
+}

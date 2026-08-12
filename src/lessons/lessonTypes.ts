@@ -71,11 +71,20 @@ export interface TeachStep extends LessonStepBase {
 /** 自分で動かして、計器の変化を確かめる手順。 */
 export interface InteractStep extends LessonStepBase {
   kind: 'interact';
-  control: InteractControl;
+  /**
+   * この手順で動かせるもの。並べた順にスライダーを出す。
+   * 次へ進むには、ここに挙げたすべてを動かしてもらう。
+   */
+  controls: InteractControl[];
+  /**
+   * 数字で見くらべたいもの。開始時の値といまの値を並べて出す。
+   * 動かせないものも挙げられる。「変わっていない」ことを見せるのが狙い。
+   */
+  watch?: InteractControl[];
   lines: string[];
   /** 実際に動かしたあとに出す補足。 */
   changeNote: string;
-  /** 動かす前に押せてしまわないよう、最低これだけ動かしてもらう。 */
+  /** 動かす前に進めてしまわないよう、最低これだけ動かしてもらう。 */
   requiredChangeDeg?: number;
   nextLabel?: string;
   completionRule: { type: 'tap_next' };
@@ -91,6 +100,14 @@ export interface QuizStep extends LessonStepBase {
   why: string;
   /** 段階的な手がかり。間違えるたびに1つずつ増やして見せる。強い否定表現は使わない。 */
   hints: string[];
+  /**
+   * 答えたあとにだけ足して見せる部品。visible に重ねる。
+   *
+   * 上空図はここに置く。問題を出している最中に見せてしまうと、
+   * 計器を読まずに図から答えが分かってしまうため。
+   * 答え合わせと理解の補助として、解いたあとに出す。
+   */
+  revealVisible?: Partial<VisibleElements>;
   /**
    * 完了画面の正解数に数えるか。
    * 学習の途中で挟む問いかけは数えず、確認問題だけを数える。

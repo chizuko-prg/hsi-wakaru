@@ -83,7 +83,7 @@ export const LESSON1: LessonDefinition = {
       kind: 'interact',
       id: 'turn',
       title: '向きを変えてみましょう',
-      control: 'heading',
+      controls: ['heading'],
       visible: HEADING_ONLY,
       headingDeg: 0,
       requiredChangeDeg: 20,

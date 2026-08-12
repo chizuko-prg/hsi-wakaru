@@ -1,3 +1,7 @@
+.lesson-controls {
+  gap: var(--space-tight);
+}
+
 .lesson-quiz {
   gap: var(--space-tight);
 }
