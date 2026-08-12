@@ -1,0 +1,16 @@
+.live-status {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 10px 14px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+
+.live-status__text {
+  font-size: var(--fs-note);
+  line-height: 1.7;
+  color: var(--navy);
+}

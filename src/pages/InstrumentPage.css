@@ -1,0 +1,36 @@
+.instrument-controls {
+  gap: var(--space-tight);
+}
+
+.instrument-parts__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-tight);
+}
+
+.instrument-chip {
+  min-height: var(--tap-min);
+  padding: 8px 14px;
+  background: var(--paper);
+  color: var(--navy);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-ui);
+  font-size: var(--fs-note);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.instrument-chip:hover {
+  border-color: var(--amber);
+}
+
+.instrument-chip[aria-pressed='true'] {
+  background: var(--navy);
+  color: var(--paper);
+  border-color: var(--navy);
+}
+
+.instrument-footer {
+  align-items: stretch;
+}

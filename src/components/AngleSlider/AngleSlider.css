@@ -1,0 +1,121 @@
+.angle-slider {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-tight);
+  padding: 12px var(--space) 14px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-left: 5px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+
+.angle-slider[data-tone='course'] {
+  border-left-color: var(--hsi-course);
+}
+
+.angle-slider[data-tone='heading'] {
+  border-left-color: var(--navy);
+}
+
+.angle-slider[data-tone='position'] {
+  border-left-color: var(--navy-soft);
+}
+
+.angle-slider__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-tight);
+}
+
+.angle-slider__value {
+  color: var(--navy);
+}
+
+.angle-slider[data-tone='course'] .angle-slider__value {
+  color: #1f6ea8;
+}
+
+/* --- スライダー本体。指で確実につかめる大きさにする --- */
+
+.angle-slider__range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: var(--tap-min);
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.angle-slider__range::-webkit-slider-runnable-track {
+  height: 10px;
+  border-radius: 5px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+}
+
+.angle-slider__range::-moz-range-track {
+  height: 10px;
+  border-radius: 5px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+}
+
+.angle-slider__range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 30px;
+  height: 30px;
+  margin-top: -11px;
+  border-radius: 50%;
+  background: var(--navy);
+  border: 3px solid var(--paper);
+  box-shadow: var(--shadow-flat);
+}
+
+.angle-slider__range::-moz-range-thumb {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--navy);
+  border: 3px solid var(--paper);
+  box-shadow: var(--shadow-flat);
+}
+
+.angle-slider[data-tone='course'] .angle-slider__range::-webkit-slider-thumb {
+  background: var(--hsi-course);
+}
+
+.angle-slider[data-tone='course'] .angle-slider__range::-moz-range-thumb {
+  background: var(--hsi-course);
+}
+
+/* --- ±ボタン --- */
+
+.angle-slider__steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-tight);
+}
+
+.angle-slider__step {
+  min-height: var(--tap-min);
+  padding: 8px 4px;
+  background: var(--paper);
+  color: var(--navy);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.angle-slider__step:hover {
+  border-color: var(--amber);
+}
+
+.angle-slider__hint {
+  font-size: 14px;
+}

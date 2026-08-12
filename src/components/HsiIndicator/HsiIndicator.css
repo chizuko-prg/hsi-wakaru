@@ -1,0 +1,182 @@
+.hsi {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-tight);
+}
+
+/* --- 上部の数値窓 --- */
+
+.hsi__readouts {
+  display: flex;
+  gap: var(--space-tight);
+}
+
+.hsi__readout {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 8px 12px;
+  background: var(--board);
+  border-radius: var(--radius-sm);
+  min-width: 0;
+}
+
+.hsi__readout .mono-label {
+  color: var(--board-muted);
+  font-size: 11.5px;
+}
+
+.hsi__readout .readout {
+  color: var(--hsi-ink);
+}
+
+.hsi__readout--course .readout {
+  color: var(--hsi-course);
+}
+
+/* --- 計器の面 --- */
+
+.hsi__face-wrap {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-tight) 0;
+  background: var(--hsi-bezel);
+  border-radius: var(--radius-card);
+}
+
+.hsi__face {
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  display: block;
+}
+
+.hsi-bezel {
+  fill: var(--hsi-bezel);
+}
+
+.hsi-face {
+  fill: var(--hsi-face);
+  stroke: var(--hsi-face-line);
+  stroke-width: 1;
+}
+
+/* --- 注目表示。選んだ部品以外を落とす --- */
+
+.hsi-part {
+  transition: opacity 200ms ease;
+}
+
+.hsi-part.is-dimmed {
+  opacity: 0.22;
+}
+
+/*
+ * 回転する層。
+ * transform-box: view-box と viewBox 座標の中心を明示して、
+ * 親の変形に左右されず必ず計器の中心で回るようにする。
+ *
+ * ローズには .hsi-part と .hsi-rotor の両方が付く。
+ * transition の短縮形は後勝ちで丸ごと置き換わるので、
+ * この規則を .hsi-part より後に置き、opacity も一緒に書いておく。
+ * 片方だけ書くと、回転が動かなくなるか、注目表示が効かなくなる。
+ */
+.hsi-rotor {
+  transform-box: view-box;
+  transform-origin: 120px 120px;
+  transition:
+    transform var(--motion-calm) var(--ease-instrument),
+    opacity 200ms ease;
+}
+
+/* スライダーを動かしている最中は、指の動きに遅れないよう短くする。 */
+.hsi__face[data-motion='fast'] .hsi-rotor {
+  transition-duration: var(--motion-fast), 200ms;
+}
+
+/* --- コンパスローズ --- */
+
+.hsi-tick {
+  stroke: var(--hsi-ink-muted);
+  stroke-width: 1.6;
+}
+
+.hsi-tick--major {
+  stroke: var(--hsi-ink);
+  stroke-width: 2.6;
+}
+
+.hsi-rose-label {
+  fill: var(--hsi-ink);
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.hsi-rose-label--cardinal {
+  font-size: 18px;
+}
+
+/* --- コース矢印 --- */
+
+.hsi-course-head {
+  fill: var(--hsi-course);
+}
+
+.hsi-course-shaft {
+  stroke: var(--hsi-course);
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+
+/* --- CDI --- */
+
+.hsi-dot {
+  fill: var(--hsi-ink-muted);
+}
+
+.hsi-cdi-bar {
+  stroke: var(--hsi-cdi);
+  stroke-width: 6;
+  stroke-linecap: round;
+  transform-box: view-box;
+  transform-origin: 120px 120px;
+  transition: transform var(--motion-calm) var(--ease-instrument);
+}
+
+.hsi__face[data-motion='fast'] .hsi-cdi-bar {
+  transition-duration: var(--motion-fast);
+}
+
+/* 左右のずれを読み取れない向きでは、針を弱めて「参考外」であることを示す。 */
+.hsi-cdi-bar--weak {
+  opacity: 0.35;
+}
+
+/* --- TO / FROM --- */
+
+.hsi-toFrom--to {
+  fill: var(--hsi-to);
+}
+
+.hsi-toFrom--from {
+  fill: var(--hsi-from);
+}
+
+/* --- 固定層 --- */
+
+.hsi-lubber {
+  fill: var(--hsi-heading);
+}
+
+.hsi-fixed-mark {
+  stroke: var(--hsi-ink-muted);
+  stroke-width: 2.4;
+}
+
+.hsi-aircraft {
+  stroke: var(--hsi-heading);
+  stroke-width: 3.4;
+  stroke-linecap: round;
+}

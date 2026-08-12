@@ -4,6 +4,7 @@ import { useHashRoute } from './app/useHashRoute';
 import { AboutPage } from './pages/AboutPage';
 import { ComingSoonPage } from './pages/ComingSoonPage';
 import { HomePage } from './pages/HomePage';
+import { InstrumentPage } from './pages/InstrumentPage';
 
 export default function App() {
   const { path, navigate } = useHashRoute();
@@ -11,20 +12,9 @@ export default function App() {
   const screen = (() => {
     if (path === ROUTES.home) return <HomePage navigate={navigate} />;
     if (path === ROUTES.about) return <AboutPage navigate={navigate} />;
+    if (path === ROUTES.instrument) return <InstrumentPage navigate={navigate} />;
 
     // 以下は段階的に置き換える。それまでは行き止まりにしない。
-    if (path === ROUTES.instrument) {
-      return (
-        <ComingSoonPage
-          navigate={navigate}
-          title="計器を見る"
-          monoLabel="INDICATOR / HSI"
-          plannedIn="R1"
-          description="HSIを自分で動かし、各部をタップして意味を確認できるようにします。"
-        />
-      );
-    }
-
     if (path === ROUTES.lessons || path.startsWith(`${ROUTES.lesson}/`)) {
       return (
         <ComingSoonPage
