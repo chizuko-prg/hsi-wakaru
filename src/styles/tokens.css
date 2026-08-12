@@ -1,0 +1,90 @@
+/*
+ * デザイントークン。
+ * ベースは Sky Apps Design System v1.0。
+ *
+ * 例外は2つだけ。
+ * 1. 計器の内側で使うダーク面の色（Design System 4章の board 系をそのまま使う）
+ * 2. 学習上の意味を持つ色（COURSE / CDI / TO・FROM / TRACK / WIND）
+ *
+ * これらは HSI計器と上空図の内側だけで使い、画面全体のクロームには持ち出さない。
+ * 意味色は VORわかる？と共通にしてある。シリーズを通して
+ * 「同じ概念には同じ色」を守るため、勝手に変えない。
+ */
+
+:root {
+  /* --- Sky Apps Design System v1.0（明るい画面用） --- */
+  --paper: #fdfbf6;
+  --bg: #e9eef6;
+  --navy: #1b2a4a;
+  --navy-soft: #5a6b8c;
+  --line: #d8dce6;
+  --amber: #e8a200;
+  --amber-bg: #fff6e0;
+  --ok: #1d8a5f;
+  --warn: #e8a200;
+  --danger: #c43d3d;
+
+  /* --- Design System v1.0（ダーク画面用 / FIDS調） --- */
+  --board: #202c4d;
+  --board-line: #33426e;
+  --board-ink: #f2f4fa;
+  --board-muted: #aeb8d2;
+
+  /* --- HSI計器の面（ダーク） --- */
+  --hsi-bezel: #16203a;
+  --hsi-face: #202c4d;
+  --hsi-face-line: #33426e;
+  --hsi-ink: #f2f4fa;
+  --hsi-ink-muted: #aeb8d2;
+
+  /* --- 学習上の意味色（計器と上空図の内側のみ） --- */
+  --hsi-course: #3a9de0; /* 選択コース。VORわかる？と共通 */
+  --hsi-cdi: #7967c8; /* CDIバー。VORわかる？と共通 */
+  --hsi-to: #3f9c72;
+  --hsi-from: #d9822b;
+  --hsi-heading: #f2f4fa; /* 機首方位（固定指標・自機シンボル） */
+  --hsi-track: #e6a23c; /* 対地進路。Lesson 5 */
+  --hsi-wind: #5a6b8c; /* 風。上空図（明るい面）で使う */
+  --hsi-station: #1b2a4a;
+
+  /* --- 書体 --- */
+  --font-ui: 'Zen Kaku Gothic New', system-ui, -apple-system, 'Hiragino Sans', 'Noto Sans JP',
+    sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+
+  /* --- 文字サイズ（本文16.5px以上。改修で小さくしない） --- */
+  --fs-title: 26px;
+  --fs-screen-title: 22px;
+  --fs-card-heading: 17.5px;
+  --fs-body: 16.5px;
+  --fs-note: 15px;
+  --fs-label: 12.5px;
+  --fs-readout: 30px;
+  --fs-readout-sm: 21px;
+
+  /* --- 余白は3段のみ --- */
+  --space-tight: 8px;
+  --space: 18px;
+  --space-wide: 28px;
+
+  /* --- 面と枠 --- */
+  --radius-card: 14px;
+  --radius-button: 12px;
+  --radius-sm: 10px;
+  --shadow-card: 0 10px 30px rgba(27, 42, 74, 0.14);
+  --shadow-flat: 0 2px 8px rgba(27, 42, 74, 0.08);
+
+  --shell-max: 480px;
+  --tap-min: 44px;
+
+  /*
+   * --- 動き ---
+   * 計器の回転はこの2段だけを使う。
+   * fast: スライダーを動かしている最中（値が連続で来るので短くする）
+   * calm: 手順の切り替えなど、こちらから動かすとき
+   * いずれも prefers-reduced-motion で無効化される（global.css）。
+   */
+  --motion-fast: 80ms;
+  --motion-calm: 320ms;
+  --ease-instrument: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
