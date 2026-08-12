@@ -1,0 +1,63 @@
+.situation {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-tight);
+  padding: 12px var(--space);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+
+.situation__list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+}
+
+.situation__row {
+  display: grid;
+  grid-template-columns: 7.5em 1fr;
+  align-items: baseline;
+  gap: var(--space-tight);
+}
+
+.situation__key {
+  font-size: var(--fs-note);
+  color: var(--navy-soft);
+  font-weight: 700;
+}
+
+.situation__value {
+  margin: 0;
+  font-size: var(--fs-body);
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.situation__value[data-aligned='true'] {
+  color: var(--ok);
+}
+
+/* 「いま」の行だけ面を変えて主役にする。 */
+.situation__row--trend {
+  padding: 8px 12px;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+}
+
+.situation__value[data-trend='closing'] {
+  color: var(--ok);
+}
+
+.situation__value[data-trend='opening'] {
+  color: var(--danger);
+}
+
+.situation__value[data-trend='holding'] {
+  color: var(--navy);
+}
+
+.situation__note {
+  margin: 0;
+}

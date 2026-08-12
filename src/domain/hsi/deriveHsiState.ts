@@ -101,9 +101,12 @@ export function computeInterceptTrend(
   courseDeg: number,
 ): InterceptTrend {
   const rel = signedAngleDiff(trackDeg, courseDeg);
+
+  // 境界は「以下」で揃える。ここを未満にすると、ちょうどしきい値のときだけ
+  // 「コースに合っている」と「コースから離れている」が同時に出る。
   const parallel =
-    Math.abs(rel) < TREND_PARALLEL_EPS_DEG ||
-    Math.abs(Math.abs(rel) - 180) < TREND_PARALLEL_EPS_DEG;
+    Math.abs(rel) <= TREND_PARALLEL_EPS_DEG ||
+    Math.abs(Math.abs(rel) - 180) <= TREND_PARALLEL_EPS_DEG;
 
   // コース線と平行に進んでいるあいだは、横距離は変わらない。
   if (parallel) return 'holding';

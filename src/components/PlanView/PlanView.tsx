@@ -42,9 +42,11 @@ export interface PlanViewProps {
   state: HsiState;
   derived: HsiDerivedState;
   visible: Pick<VisibleElements, 'courseArrow' | 'cdi' | 'track' | 'wind'>;
+  /** 見くらべのために小さく並べるとき。見出しと凡例を省く。 */
+  compact?: boolean;
 }
 
-export function PlanView({ state, derived, visible }: PlanViewProps) {
+export function PlanView({ state, derived, visible, compact = false }: PlanViewProps) {
   const rel = {
     x: state.aircraft.x - state.station.x,
     y: state.aircraft.y - state.station.y,
@@ -101,10 +103,12 @@ export function PlanView({ state, derived, visible }: PlanViewProps) {
     .join('');
 
   return (
-    <figure className="plan-view">
-      <figcaption className="plan-view__caption">
-        <span className="mono-label">PLAN VIEW / 真上から見た図</span>
-      </figcaption>
+    <figure className={compact ? 'plan-view plan-view--compact' : 'plan-view'}>
+      {!compact && (
+        <figcaption className="plan-view__caption">
+          <span className="mono-label">PLAN VIEW / 真上から見た図</span>
+        </figcaption>
+      )}
 
       <svg
         className="plan-view__canvas"
@@ -187,6 +191,7 @@ export function PlanView({ state, derived, visible }: PlanViewProps) {
         )}
       </svg>
 
+      {!compact && (
       <p className="plan-view__legend note-text">
         <span className="plan-view__key plan-view__key--aircraft">▲ 自機（機首の向きに回ります）</span>
         {visible.courseArrow && (
@@ -200,6 +205,7 @@ export function PlanView({ state, derived, visible }: PlanViewProps) {
           </span>
         )}
       </p>
+      )}
     </figure>
   );
 }

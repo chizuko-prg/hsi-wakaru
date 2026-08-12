@@ -1,0 +1,73 @@
+.case-compare__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.case-compare__case {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-tight);
+  padding: 12px var(--space) var(--space);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+}
+
+.case-compare__label {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--navy);
+  letter-spacing: 0.04em;
+}
+
+/* 計器と上空図を横に並べる。同じ状態の別の見方であることを見せる。 */
+.case-compare__views {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: var(--space-tight);
+}
+
+.case-compare__readouts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px var(--space);
+  margin: 0;
+}
+
+.case-compare__readout {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.case-compare__value {
+  margin: 0;
+  font-size: var(--fs-note);
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--navy);
+}
+
+/* CDIの行は3ケースで同じ値になる。同じであることが読み取れるよう目立たせない。 */
+.case-compare__value[data-readout='cdi'] {
+  color: var(--navy);
+}
+
+.case-compare__value[data-trend='closing'] {
+  color: var(--ok);
+}
+
+.case-compare__value[data-trend='opening'] {
+  color: var(--danger);
+}
+
+.case-compare__value[data-trend='holding'] {
+  color: var(--navy-soft);
+}

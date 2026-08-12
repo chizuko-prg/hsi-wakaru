@@ -12,6 +12,7 @@ import { useInstrumentMotion } from '../app/useInstrumentMotion';
 import { aircraftRadialOf, useHsiState } from '../app/useHsiState';
 import { useProgress } from '../app/useProgress';
 import { AngleSlider } from '../components/AngleSlider/AngleSlider';
+import { CaseCompare } from '../components/CaseCompare/CaseCompare';
 import { ChangeWatch, type ChangeWatchRow } from '../components/ChangeWatch/ChangeWatch';
 import { ChoiceList } from '../components/ChoiceList/ChoiceList';
 import { ExplanationCard } from '../components/ExplanationCard/ExplanationCard';
@@ -20,6 +21,7 @@ import { LessonComplete } from '../components/LessonComplete/LessonComplete';
 import { PlanView } from '../components/PlanView/PlanView';
 import { SafetyNote } from '../components/SafetyNote/SafetyNote';
 import { ScreenHeader } from '../components/ScreenHeader/ScreenHeader';
+import { SituationStatus } from '../components/SituationStatus/SituationStatus';
 import { signedAngleDiff } from '../domain/hsi/angles';
 import type { HsiState, VisibleElements } from '../domain/hsi/types';
 import {
@@ -138,15 +140,28 @@ export function LessonPage({ navigate, lesson }: LessonPageProps) {
       ? { ...step.visible, ...step.revealVisible }
       : step.visible;
 
+  /*
+   * 動かす手順を終えられる条件。3通りある。
+   * - requiredTrend: 近づく状態を自分で作れたか（結果で見る）
+   * - requiredCourseAlignmentDeg: 機首をコースへ合わせられたか
+   * - どちらも無ければ、指定した角度ぶん動かしたか
+   */
   const requiredChange = interactStep?.requiredChangeDeg ?? 10;
-  const moved = interactStep
-    ? interactStep.controls.every(
-        (control) =>
-          Math.abs(
-            signedAngleDiff(controlValue(control, hsi.state), controlValue(control, stepInitial)),
-          ) >= requiredChange,
-      )
-    : false;
+  const moved = !interactStep
+    ? false
+    : interactStep.requiredTrend !== undefined
+      ? hsi.derived.interceptTrend === interactStep.requiredTrend
+      : interactStep.requiredCourseAlignmentDeg !== undefined
+        ? hsi.derived.interceptAngleDeg <= interactStep.requiredCourseAlignmentDeg
+        : interactStep.controls.every(
+            (control) =>
+              Math.abs(
+                signedAngleDiff(
+                  controlValue(control, hsi.state),
+                  controlValue(control, stepInitial),
+                ),
+              ) >= requiredChange,
+          );
 
   const watchRows: ChangeWatchRow[] =
     interactStep?.watch?.map((control) => ({
@@ -175,16 +190,34 @@ export function LessonPage({ navigate, lesson }: LessonPageProps) {
 
       <SafetyNote variant="learning" />
 
-      <HsiIndicator
-        state={hsi.state}
-        derived={hsi.derived}
-        visible={visible}
-        motion={motion}
-        spotlight={step.spotlight ?? null}
-      />
+      {/* 見くらべの手順は、上に1つ出すのではなくケースごとに計器と図を持つ。 */}
+      {step.kind === 'compare' ? (
+        <>
+          <ExplanationCard
+            kind="normal"
+            monoLabel="COMPARE / 見くらべる"
+            heading={step.title}
+            lines={step.lines}
+          />
+          <CaseCompare cases={step.cases} baseState={lesson.baseState} visible={step.visible} />
+          {step.note && <ExplanationCard kind="aha" lines={[step.note]} />}
+        </>
+      ) : (
+        <>
+          <HsiIndicator
+            state={hsi.state}
+            derived={hsi.derived}
+            visible={visible}
+            motion={motion}
+            spotlight={step.spotlight ?? null}
+          />
 
-      {visible.planView && (
-        <PlanView state={hsi.state} derived={hsi.derived} visible={visible} />
+          {visible.planView && (
+            <PlanView state={hsi.state} derived={hsi.derived} visible={visible} />
+          )}
+
+          {step.situation && <SituationStatus state={hsi.state} derived={hsi.derived} />}
+        </>
       )}
 
       {interactStep && (
@@ -278,11 +311,15 @@ export function LessonPage({ navigate, lesson }: LessonPageProps) {
         </button>
       ) : (
         <p className="lesson-hold note-text">
-          {interactStep
-            ? interactStep.controls.length > 1
-              ? 'つまみを両方とも動かすと、次へ進めます。'
-              : 'つまみを動かして、計器の変化を見てから次へ進みます。'
-            : '選択肢から選ぶと、次へ進めます。'}
+          {!interactStep
+            ? '選択肢から選ぶと、次へ進めます。'
+            : interactStep.requiredTrend === 'closing'
+              ? 'コースへ近づく向きを作ると、次へ進めます。'
+              : interactStep.requiredCourseAlignmentDeg !== undefined
+                ? '機首をコースの向きに合わせると、次へ進めます。'
+                : interactStep.controls.length > 1
+                  ? 'つまみを両方とも動かすと、次へ進めます。'
+                  : 'つまみを動かして、計器の変化を見てから次へ進みます。'}
         </p>
       )}
     </div>
