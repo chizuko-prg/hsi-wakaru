@@ -23,6 +23,20 @@ export interface Point {
   y: number;
 }
 
+/** レッスン1つ分の進捗。 */
+export interface LessonProgress {
+  status: LessonStatus;
+  /** 次に開いたとき、ここから再開する手順。回答内容は保存しない。 */
+  lastStepId?: string;
+  completedAt?: string;
+}
+
+/** 端末内に保存する学習記録のすべて。個人情報は含めない。 */
+export interface AppProgress {
+  schemaVersion: 1;
+  lessons: Record<LessonId, LessonProgress>;
+}
+
 /** 風。fromDeg は風が吹いてくる方向（航空の慣習どおり）。 */
 export interface Wind {
   fromDeg: number;

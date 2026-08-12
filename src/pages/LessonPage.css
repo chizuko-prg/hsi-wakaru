@@ -1,0 +1,24 @@
+.lesson-quiz {
+  gap: var(--space-tight);
+}
+
+.lesson-quiz__prompt {
+  margin: 0;
+  padding: 14px var(--space);
+  background: var(--navy);
+  color: var(--paper);
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-card-heading);
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.lesson-hold {
+  margin: 0;
+  padding: 12px 14px;
+  background: var(--amber-bg);
+  border: 1px solid #f0d9a0;
+  border-radius: var(--radius-sm);
+  text-align: center;
+  color: var(--navy);
+}

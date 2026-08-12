@@ -20,3 +20,33 @@
   color: var(--navy);
   text-underline-offset: 3px;
 }
+
+.about-reset__confirm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-tight);
+  padding: var(--space);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+
+.about-reset__actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-tight);
+}
+
+.about-reset__danger {
+  border-left-color: var(--danger);
+  color: var(--danger);
+}
+
+.about-reset__done {
+  margin: 0;
+  padding: 10px 14px;
+  background: var(--amber-bg);
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-note);
+  font-weight: 700;
+}

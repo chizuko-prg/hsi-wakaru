@@ -1,0 +1,43 @@
+.lesson-complete__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-tight);
+}
+
+.lesson-complete__score {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 12px 14px;
+  background: var(--amber-bg);
+  border: 1px dashed #f0d9a0;
+  border-radius: var(--radius-sm);
+}
+
+.lesson-complete__score .mono-label {
+  color: #9a7420;
+}
+
+.lesson-complete__learned {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-tight);
+}
+
+.lesson-complete__list {
+  margin: 0;
+  padding-left: 1.2em;
+  font-size: var(--fs-note);
+  line-height: 1.8;
+  color: var(--navy);
+}
+
+.lesson-complete__list li + li {
+  margin-top: 4px;
+}
+
+.lesson-complete__next {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}

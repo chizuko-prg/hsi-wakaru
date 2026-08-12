@@ -1,0 +1,71 @@
+.explanation {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-tight);
+  padding: var(--space);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+}
+
+/* 「そういうことか」を狙う手順だけ、面を変えて主役にする。 */
+.explanation--aha {
+  background: var(--amber-bg);
+  border-color: #f0d9a0;
+  box-shadow: var(--shadow-card);
+}
+
+.explanation--hint {
+  background: var(--paper);
+  border-left: 5px solid var(--amber);
+}
+
+.explanation--success {
+  background: var(--paper);
+  border-left: 5px solid var(--ok);
+}
+
+.explanation--hint .mono-label {
+  color: #9a7420;
+}
+
+.explanation--success .mono-label {
+  color: var(--ok);
+}
+
+/* --- 用語カード --- */
+
+.explanation__term {
+  margin: 4px 0 0;
+  padding: 12px 14px;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+}
+
+.explanation--aha .explanation__term {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.explanation__term-name {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-tight);
+  font-family: var(--font-mono);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.explanation__term-full {
+  font-family: var(--font-ui);
+  font-size: var(--fs-note);
+  font-weight: 700;
+  color: var(--navy-soft);
+}
+
+.explanation__term-desc {
+  margin: 4px 0 0;
+  font-size: var(--fs-note);
+  line-height: 1.8;
+  color: var(--navy);
+}

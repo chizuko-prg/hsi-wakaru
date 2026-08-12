@@ -1,7 +1,10 @@
 /** About / 注意事項。免責は省略しない。 */
 
+import { useState } from 'react';
 import { ROUTES } from '../app/routes';
+import { useProgress } from '../app/useProgress';
 import { ScreenHeader } from '../components/ScreenHeader/ScreenHeader';
+import { PROGRESS_KEY } from '../storage/progressStorage';
 import type { PageProps } from './pageProps';
 import './AboutPage.css';
 
@@ -17,6 +20,10 @@ const REFERENCES = [
 ];
 
 export function AboutPage({ navigate }: PageProps) {
+  const { resetProgress } = useProgress();
+  const [asking, setAsking] = useState(false);
+  const [didReset, setDidReset] = useState(false);
+
   return (
     <div className="stack">
       <ScreenHeader
@@ -82,6 +89,55 @@ export function AboutPage({ navigate }: PageProps) {
         <p className="note-text">
           ※本アプリの角度計算、境界幅、表示範囲は、概念学習用として簡略化した実装であり、実機の認証仕様を再現するものではありません。
         </p>
+      </section>
+
+      <section className="about-section">
+        <h2 className="card-heading">学習記録</h2>
+        <p className="note-text">
+          レッスンの進み具合は、この端末の中だけに保存されます（保存キー: {PROGRESS_KEY}）。
+          回答の内容や正解数は保存していません。
+        </p>
+
+        {didReset && (
+          <p className="about-reset__done" role="status">
+            学習記録をリセットしました
+          </p>
+        )}
+
+        {asking ? (
+          <div className="about-reset__confirm">
+            <p className="body-text">
+              レッスンの進み具合と完了記録を削除します。よろしいですか。
+            </p>
+            <div className="about-reset__actions">
+              <button
+                type="button"
+                className="button-secondary"
+                onClick={() => setAsking(false)}
+              >
+                やめる
+                <span className="mono-label">CANCEL</span>
+              </button>
+              <button
+                type="button"
+                className="button-secondary about-reset__danger"
+                onClick={() => {
+                  // 消すのは学習記録のキーだけ。他の保存内容には触れない。
+                  resetProgress();
+                  setAsking(false);
+                  setDidReset(true);
+                }}
+              >
+                削除する
+                <span className="mono-label">RESET</span>
+              </button>
+            </div>
+          </div>
+        ) : (
+          <button type="button" className="button-quiet" onClick={() => setAsking(true)}>
+            学習記録をリセット
+          </button>
+        )}
       </section>
 
       <section className="about-section">

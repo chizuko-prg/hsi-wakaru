@@ -1,11 +1,17 @@
 /** トップ画面。 */
 
 import { ROUTES } from '../app/routes';
+import { useProgress } from '../app/useProgress';
 import { SafetyNote } from '../components/SafetyNote/SafetyNote';
+import { LESSON_CATALOG } from '../lessons/lessonCatalog';
+import { countCompletedLessons } from '../storage/progressStorage';
 import type { PageProps } from './pageProps';
 import './HomePage.css';
 
 export function HomePage({ navigate }: PageProps) {
+  const { progress } = useProgress();
+  const completed = countCompletedLessons(progress);
+
   return (
     <div className="stack">
       <header className="home-hero">
@@ -21,9 +27,16 @@ export function HomePage({ navigate }: PageProps) {
 
       <nav className="stack" aria-label="メニュー">
         <button type="button" className="button-primary" onClick={() => navigate(ROUTES.lessons)}>
-          はじめて学ぶ
+          {completed === 0 ? 'はじめて学ぶ' : '学習のつづきへ'}
           <span className="mono-label">BASIC COURSE / 5 LESSONS</span>
         </button>
+
+        <div className="home-progress card">
+          <span className="mono-label">PROGRESS / 基本コース</span>
+          <p className="home-progress__value readout-sm">
+            {completed} / {LESSON_CATALOG.length} 完了
+          </p>
+        </div>
 
         <button
           type="button"

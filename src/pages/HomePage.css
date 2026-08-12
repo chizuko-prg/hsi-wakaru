@@ -14,6 +14,17 @@
   border-bottom: 2px solid var(--amber);
 }
 
+.home-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 12px var(--space);
+}
+
+.home-progress__value {
+  margin: 0;
+}
+
 .home-about {
   display: flex;
   flex-direction: column;

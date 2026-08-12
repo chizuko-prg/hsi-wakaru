@@ -8,8 +8,9 @@
  * - CDI は Heading をどれだけ回しても変わらない
  */
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { ROUTES } from '../app/routes';
+import { useInstrumentMotion } from '../app/useInstrumentMotion';
 import { aircraftRadialOf, useHsiState } from '../app/useHsiState';
 import { AngleSlider } from '../components/AngleSlider/AngleSlider';
 import { HsiIndicator, type HsiPart } from '../components/HsiIndicator/HsiIndicator';
@@ -100,21 +101,7 @@ export function InstrumentPage({ navigate }: PageProps) {
   const { state, derived } = hsi;
 
   const [spotlight, setSpotlight] = useState<HsiPart | null>(null);
-  const [motion, setMotion] = useState<'calm' | 'fast'>('calm');
-  const settleTimer = useRef<number | null>(null);
-
-  // 操作している最中だけ計器の動きを短くし、指の動きから遅れないようにする。
-  const markInteracting = useCallback(() => {
-    setMotion('fast');
-    if (settleTimer.current !== null) clearTimeout(settleTimer.current);
-    settleTimer.current = window.setTimeout(() => setMotion('calm'), 260);
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      if (settleTimer.current !== null) clearTimeout(settleTimer.current);
-    };
-  }, []);
+  const { motion, markInteracting } = useInstrumentMotion();
 
   const focused = PARTS.find((part) => part.id === spotlight) ?? null;
 
