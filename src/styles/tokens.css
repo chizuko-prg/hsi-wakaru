@@ -48,8 +48,7 @@
   --hsi-station: #1b2a4a;
 
   /* --- 書体 --- */
-  --font-ui: 'Zen Kaku Gothic New', system-ui, -apple-system, 'Hiragino Sans', 'Noto Sans JP',
-    sans-serif;
+  --font-ui: system-ui, -apple-system, 'Hiragino Sans', 'Noto Sans JP', sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
 
   /* --- 文字サイズ（本文16.5px以上。改修で小さくしない） --- */
