@@ -50,3 +50,11 @@
   font-size: var(--fs-note);
   font-weight: 700;
 }
+
+/* 共通プライバシーポリシーへのリンク */
+.about-policy a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  white-space: nowrap;
+}

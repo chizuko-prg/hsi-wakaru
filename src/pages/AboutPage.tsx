@@ -70,8 +70,13 @@ export function AboutPage({ navigate }: PageProps) {
           <li>ログイン、外部データベース、個人情報の保存</li>
         </ul>
         <p className="note-text">
-          ※学習の記録はこの端末の中だけに保存します。外部へは送信しません。書体の読み込みのみ Google
-          Fonts を利用しています。
+          ※学習の記録はこの端末の中だけに保存します。外部へは送信しません。外部のフォント配信は使っていません。
+        </p>
+        <p className="note-text about-policy">
+          アクセス解析・端末内保存の扱いについて：
+          <a href="https://sky-apps-terminal.vercel.app/privacy/" target="_blank" rel="noopener noreferrer">
+            プライバシーポリシー
+          </a>
         </p>
       </section>
 
