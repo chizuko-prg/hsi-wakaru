@@ -1,5 +1,3 @@
-import { Analytics } from '@vercel/analytics/react';
-import { stripQueryAndHash } from './app/analyticsUrl';
 import { ROUTES } from './app/routes';
 import { useHashRoute } from './app/useHashRoute';
 import { findLesson } from './lessons/lessonCatalog';
@@ -39,7 +37,6 @@ export default function App() {
   return (
     <>
       <main className="shell">{screen}</main>
-      <Analytics beforeSend={stripQueryAndHash} />
     </>
   );
 }
