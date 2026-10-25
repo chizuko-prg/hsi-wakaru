@@ -73,7 +73,9 @@ export function AboutPage({ navigate }: PageProps) {
           ※学習の記録はこの端末の中だけに保存します。外部へは送信しません。外部のフォント配信は使っていません。
         </p>
         <p className="note-text about-policy">
-          アクセス解析・端末内保存の扱いについて：
+          本アプリでは、Vercel Web Analyticsによるアクセス計測を終了しました。
+          <br />
+          データの扱いについて：
           <a href="https://sky-apps-terminal.vercel.app/privacy/" target="_blank" rel="noopener noreferrer">
             プライバシーポリシー
           </a>

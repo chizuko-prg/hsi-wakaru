@@ -133,7 +133,7 @@ Wind Correction Angle の計算ドリルにしないため、次を守ります�
 | スタイル | 素のCSS + カスタムプロパティ（Sky Apps Design System v1.0 準拠） |
 | 描画 | インラインSVG |
 | アニメーション | CSS transition のみ（`prefers-reduced-motion` で無効化） |
-| 解析 | @vercel/analytics |
+| 解析 | なし（Vercel Web Analytics は終了。下記「アクセス解析について」を参照） |
 | 配信 | Vercel |
 
 バックエンド、ログイン、外部データベース、GPSはありません。
@@ -229,6 +229,19 @@ VORわかる？との差別化を意図しています。
 ```bash
 qlmanage -t -s 1024 -o /tmp/hsi-icon assets/icon.svg && qlmanage -t -s 1024 -o /tmp/hsi-icon assets/icon-square.svg && for s in 16 32 48; do sips -z $s $s /tmp/hsi-icon/icon.svg.png --out "public/favicon-${s}x${s}.png"; done && sips -z 180 180 /tmp/hsi-icon/icon-square.svg.png --out public/apple-touch-icon.png && sips -z 192 192 /tmp/hsi-icon/icon-square.svg.png --out public/icon-192.png && sips -z 512 512 /tmp/hsi-icon/icon-square.svg.png --out public/icon-512.png && cp assets/icon.svg public/favicon.svg
 ```
+
+## アクセス解析について
+
+Vercel Web Analytics によるアクセス計測は終了しました。計測コード（`<Analytics />`）と
+依存パッケージ（`@vercel/analytics`）は削除済みです。
+
+- 学習の記録は、お使いのブラウザの `localStorage`（キー: `hsiWakaru.progress.v1`）にだけ保存され、本アプリがサーバーへ送信することはありません
+- データの扱い：[プライバシーポリシー](https://sky-apps-terminal.vercel.app/privacy/)
+
+| 項目 | 内容 |
+|------|------|
+| 停止日 | 2026-10-25（Vercel 側で Web Analytics の無効化を確認した日） |
+| 表示更新日 | 2026-10-25（この説明と画面の表示を本番へ反映した日。停止日とは別に記録する） |
 
 ## 免責
 
